@@ -57,10 +57,10 @@ int main() {
 
     int right_arm_col = n-1;
 
-    while(left_arm_col < heart_col && matrix[heart_row][left_arm_col] != '*')
+    while(matrix[heart_row][left_arm_col] != '*')
         left_arm_col++;
     
-    while(right_arm_col > heart_col && matrix[heart_row][right_arm_col] != '*')
+    while(matrix[heart_row][right_arm_col] != '*')
         right_arm_col--;
     
     // printf("left_arm_col: %d\n", left_arm_col);
