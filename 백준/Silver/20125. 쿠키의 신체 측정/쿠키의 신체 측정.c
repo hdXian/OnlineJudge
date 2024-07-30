@@ -14,7 +14,7 @@ int main() {
     // mem allocate
     char** matrix = (char**)calloc(n, sizeof(char*));
     for(int i=0; i<n; i++)
-        matrix[i] = (char*)calloc(n, sizeof(char));
+        matrix[i] = (char*)calloc(n+1, sizeof(char));
 
     // input matrix
     for(int i=0; i<n; i++) {
@@ -53,8 +53,8 @@ int main() {
     int heart_col = heart[_Y];
     // printf("head_line: %d\n", head[_X]);
     // printf("heart_line: %d\n", heart_line);
-    int left_arm_col = 0;
 
+    int left_arm_col = 0;
     int right_arm_col = n-1;
 
     while(matrix[heart_row][left_arm_col] != '*')
@@ -109,9 +109,9 @@ int main() {
     printf("%d %d %d %d %d\n", left_arm_len, right_arm_len, middle_len, left_leg_len, right_len_len);
 
     // free mem
-    // for(int i=0; i<n; i++)
-    //     free(matrix[i]);
-    // free(matrix);
+    for(int i=0; i<n; i++)
+        free(matrix[i]);
+    free(matrix);
 
     return 0;
 
