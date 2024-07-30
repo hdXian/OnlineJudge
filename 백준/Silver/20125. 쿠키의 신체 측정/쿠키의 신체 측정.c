@@ -8,7 +8,6 @@ int main() {
 
     int n;
     scanf("%d", &n);
-    // printf("n: %d\n", n);
     getchar(); // remove newline char
 
     // mem allocate
@@ -51,8 +50,6 @@ int main() {
 
     int heart_row = heart[_X];
     int heart_col = heart[_Y];
-    // printf("head_line: %d\n", head[_X]);
-    // printf("heart_line: %d\n", heart_line);
 
     int left_arm_col = 0;
     int right_arm_col = n-1;
@@ -62,16 +59,14 @@ int main() {
     
     while(matrix[heart_row][right_arm_col] != '*')
         right_arm_col--;
-    
-    // printf("left_arm_col: %d\n", left_arm_col);
-    // printf("right_arm_col: %d\n", right_arm_col);
 
+    
     int middle_row = heart_row+1;
     while (matrix[middle_row][heart_col] == '*')
         middle_row++;
     
     middle_row--;
-    // printf("middle_row: %d\n", middle_row);
+    
 
     int left_leg_row = middle_row+1;
     int left_leg_col = heart_col-1;
@@ -87,9 +82,7 @@ int main() {
     
     left_leg_row--;
     right_leg_row--;
-
-    // printf("left_leg_row: %d\n", left_leg_row);
-    // printf("right_leg_row: %d\n", right_leg_row);
+    
 
     int left_arm_len = heart_col - left_arm_col;
     int right_arm_len = right_arm_col - heart_col;
@@ -97,17 +90,12 @@ int main() {
     int middle_len = middle_row - heart_row;
 
     int left_leg_len = left_leg_row - middle_row;
-    int right_len_len = right_leg_row - middle_row;
-
-    // printf("left_arm_len: %d\n", left_arm_len);
-    // printf("right_arm_len: %d\n", right_arm_len);
-    // printf("middle_len: %d\n", middle_len);
-    // printf("left_leg_len: %d\n", left_leg_len);
-    // printf("right_len_len: %d\n", right_len_len);
+    int right_leg_len = right_leg_row - middle_row;
 
     printf("%d %d\n", heart[_X]+1, heart[_Y]+1);
-    printf("%d %d %d %d %d\n", left_arm_len, right_arm_len, middle_len, left_leg_len, right_len_len);
+    printf("%d %d %d %d %d\n", left_arm_len, right_arm_len, middle_len, left_leg_len, right_leg_len);
 
+    
     // free mem
     for(int i=0; i<n; i++)
         free(matrix[i]);
