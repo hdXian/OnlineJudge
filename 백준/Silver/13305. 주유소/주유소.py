@@ -13,13 +13,15 @@ oil_prices = list(map(int, input().split())) # 마지막 도시의 연료값은 
 # print(distances[:2])
 
 total_price = 0
+min_price = oil_prices[0]
 # 각 도로를 지날 때마다
 # 1번째 도로의 기름 수급처: 1번 도시
 # n번째 도로의 기름 수급처: 1, 2, 3, ..., n번째 도시
 for i in range(n-1): # i는 인덱스
     # print("i:", i)
     distance = distances[i]
-    min_price = min(oil_prices[:(i+1)])
+    if oil_prices[i] < min_price:
+        min_price = oil_prices[i]
     total_price += distance * min_price
 
 # print("total_price:", total_price)
