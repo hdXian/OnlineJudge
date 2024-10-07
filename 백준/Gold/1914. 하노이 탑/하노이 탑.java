@@ -3,7 +3,7 @@ import java.math.BigInteger;
 
 public class Main {
 
-    public static StringBuilder builder = new StringBuilder();
+    public static BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -13,16 +13,15 @@ public class Main {
 
         // 이동 횟수는 공식으로
         BigInteger num = two.pow(n).subtract(BigInteger.valueOf(1));
-
-        builder.append(num.toString());
-        builder.append("\n");
+        System.out.println(num);
 
         // n이 20 이하면 과정도 출력
         if (n<=20) {
             hanoi(n, 1, 2, 3);
         }
 
-        System.out.println(builder.toString());
+        writer.flush();
+        writer.close();
 
     }
 
@@ -34,10 +33,7 @@ public class Main {
         hanoi(n-1, src, dst, middle);
 
         // 마지막 원판을 출발에서 마지막으로 이동
-        builder.append(src);
-        builder.append(" ");
-        builder.append(dst);
-        builder.append("\n");
+        writer.write(src + " " + dst + "\n");
 
         // 중간으로 이동한 n-1개의 원판을 중간에서 마지막으로 이동 (출발 장대를 경유로 사용)
         hanoi(n-1, middle, src, dst);
