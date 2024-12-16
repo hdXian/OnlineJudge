@@ -39,25 +39,21 @@ public class Main {
             union(n1, n2);
         }
 
-        // 집합의 루트들
-        Set<Integer> roots = new HashSet<>();
+        int[] minCost = new int[N+1];
+        Arrays.fill(minCost, Integer.MAX_VALUE);
+
         for(int i=1; i<=N; i++) {
-            roots.add(findParent(i));
+            // 학생의 루트 노드를 찾는다.
+            int root = findParent(i);
+
+            // 루트 노드의 인덱스에 그 학생의 친구비를 비교해 더 작은 값으로 업데이트한다.
+            minCost[root] = Math.min(minCost[root], costs[i]);
         }
-        roots.remove(0); // 0은 안 쓰는 인덱스. 집합 루트가 될 수 없음.
 
-        for (int r: roots) {
-
-            int price = 100000; // 10만 (친구비 최대는 1만)
-
-            // 부모가 r인 학생 중에서 친구비가 가장 적은 비용을 찾는다.
-            for (int i=1; i<=N; i++) {
-                if (findParent(i) == r)
-                    price = Math.min(price, costs[i]);
-            }
-
-            totalPrice += price;
-
+        for(int i=1; i<=N; i++) {
+            // i가 루트 노드라면 (경로 압축으로 parents 배열에는 루트 노드들만이 저장돼있다)
+            if (i == parents[i])
+                totalPrice += minCost[i];
         }
 
         if (totalPrice <= K)
@@ -71,6 +67,7 @@ public class Main {
         int p1 = findParent(n1);
         int p2 = findParent(n2);
 
+        // 더 작은 놈으로 부모를 업데이트 (중요 -> 부모를 업데이트 해야 함.)
         if (p1 != p2) {
             if (p1 < p2) {
                 parents[p2] = p1;
@@ -82,7 +79,11 @@ public class Main {
     }
 
     public static int findParent(int n) {
-        return (parents[n] == n) ? n : findParent(parents[n]);
+        // 경로 압축 -> 모두 루트를 부모로 직접 가리키도록 업데이트 해놓기
+        if (parents[n] != n) {
+            parents[n] = findParent(parents[n]);
+        }
+        return parents[n];
     }
 
 }
