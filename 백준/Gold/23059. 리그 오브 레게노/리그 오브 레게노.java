@@ -57,18 +57,6 @@ public class Main {
 
         topologySort();
 
-        boolean flag = true;
-        for(Integer val: map.values()) {
-            if (degree[val] != 0) {
-                System.out.println(-1);
-                flag = false;
-                break;
-            }
-        }
-
-        if (flag)
-            System.out.println(sb);
-
     }
 
     // map -> Key: String, Value: Integer
@@ -115,9 +103,17 @@ public class Main {
             while(!pq.isEmpty()) {
                 q.add(pq.poll());
             }
-            
+
+        }
+
+        if (count != map.size()) {
+            System.out.println(-1);
+        }
+        else {
+            System.out.println(sb);
         }
 
     }
-    
+
+
 }
