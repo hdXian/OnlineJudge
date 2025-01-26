@@ -78,28 +78,27 @@ public class Main {
         // 진입 차수가 0인 노드들끼리의 순서는 사전 순이다.
 
         // 진입 차수가 0인 노드들을 처음에 받는다.
-        List<String> zlist = new ArrayList<>();
+        Queue<String> pq = new PriorityQueue<>();
         for (Integer value : map.values()) {
             if (degree[value] == 0)
-                zlist.add(reverseMap.get(value));
+                pq.add(reverseMap.get(value));
         }
 
-        Collections.sort(zlist);
         Queue<String> q = new LinkedList<>(); // pq로 정렬한 노드들로 큐를 구성
-        for(String item: zlist) {
-            q.add(item);
+        while (!pq.isEmpty()) {
+            q.add(pq.poll());
         }
 
+        int count = 0;
         int length;
         while (!q.isEmpty()) {
             length = q.size();
 
-            List<String> sortList = new ArrayList<>();
-
             // 진입 차수가 0인 요소를 꺼낸다.
             for(int i=0; i<length; i++) {
                 String item = q.poll();
-                sb.append(item).append("\n");
+                count++;
+                sb.append(item).append('\n');
 
                 Integer num = map.get(item); // 해당 아이템의 번호 가져오기
                 List<Integer> nodes = edges.get(num - 1); // 해당 아이템 번호의 인접 노드들 번호 가져오기
@@ -108,20 +107,17 @@ public class Main {
                 for (Integer n: nodes) {
                     degree[n]--;
                     if (degree[n] == 0) {
-                        sortList.add(reverseMap.get(n)); // key가 번호인 map에서 아이템 이름을 가져온다.
+                        pq.add(reverseMap.get(n)); // key가 번호인 map에서 아이템 이름을 가져온다.
                     }
                 }
             }
 
-            Collections.sort(sortList);
-
-            for(String item: sortList) {
-                q.add(item);
+            while(!pq.isEmpty()) {
+                q.add(pq.poll());
             }
-
+            
         }
 
     }
-
-
+    
 }
