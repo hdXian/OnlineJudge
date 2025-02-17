@@ -30,7 +30,6 @@ public class Main {
         M = Integer.parseInt(tkn.nextToken()); // 피자 A 조각 개수 (3 ~ 1000)
         N = Integer.parseInt(tkn.nextToken()); // 피자 B 조각 개수
 
-
         // 피자 A 조각 입력받기
         // ex) 2 2 1 7 2
         pieces = new int[M];
@@ -43,22 +42,37 @@ public class Main {
         }
 
         // 피자 개수별로 나올 수 있는 조합 계산
-        for(int i=2; i<=M; i++) {
-            for(int j=0; j<M; j++) {
+
+        // 모든 피자 조각을 사용하는 경우 계산
+        int tmp = 0;
+        for(int k=0; k<M; k++) {
+            tmp += pieces[k];
+        }
+        if (tmp <= P)
+            tableA[tmp] = 1;
+
+        for(int i=2; i<M; i++) {
+            int pre_size = 0;
+
+            // 첫번째 조각부터 i개의 조각 이어붙이기
+            for(int k=0; k<i; k++) {
+                pre_size += pieces[k];
+            }
+            if (pre_size <= P)
+                tableA[pre_size] += 1;
+
+            for(int j=1; j<M; j++) {
                 // j번째 조각부터 i개의 조각 이어붙이기
-                int size = 0;
-                for(int k=0; k<i; k++) {
-                    int idx = (j+k) % M;
-                    size += pieces[idx];
-                }
-                // 계산된 크기에 해당하는 인덱스에 1 설정
+                int end = (j + i - 1) % M;
+
+                int size = pre_size + pieces[end] - pieces[j-1];
+                pre_size = size;
+
+                // 계산된 크기에 해당하는 인덱스에 1 추가
                 if (size <= P) {
-                    // 모든 피자 조각을 사용하는 경우라면 경우의 수를 1로 설정
-                    if (i == M)
-                        tableA[size] = 1;
-                    else
-                        tableA[size] += 1;
+                    tableA[size] += 1;
                 }
+
             }
         }
 
@@ -71,22 +85,33 @@ public class Main {
                 tableB[piece] += 1;
         }
 
+        // 모든 조각을 이어붙이는 경우 계산
+        tmp = 0;
+        for(int k=0; k<N; k++) {
+            tmp += pieces[k];
+        }
+        if (tmp <= P)
+            tableB[tmp] = 1;
+
         // 피자 개수별로 나올 수 있는 조합 계산
-        for(int i=2; i<=N; i++) {
-            for(int j=0; j<N; j++) {
+        for(int i=2; i<N; i++) {
+            int pre_size = 0;
+
+            // 첫 번째 조각부터 i개의 조각 이어붙이기
+            for(int k=0; k<i; k++) {
+                pre_size += pieces[k];
+            }
+            if (pre_size <= P)
+                tableB[pre_size]++;
+
+            for(int j=1; j<N; j++) {
                 // j번째 조각부터 i개의 조각 이어붙이기
-                int size = 0;
-                for(int k=0; k<i; k++) {
-                    int idx = (j+k) % N;
-                    size += pieces[idx];
-                }
+                int end = (j + i - 1) % N;
+                int size = pre_size + pieces[end] - pieces[j-1];
+                pre_size = size;
                 // 계산된 크기에 해당하는 인덱스에 1 설정
                 if (size <= P) {
-                    // 모든 피자 조각을 사용하는 경우라면 경우의 수를 1로 설정
-                    if (i == N)
-                        tableB[size] = 1;
-                    else
-                        tableB[size] += 1;
+                    tableB[size] += 1;
                 }
             }
         }
