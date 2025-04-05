@@ -8,6 +8,7 @@ public class Main {
 
     static int N;
     static int[] hs;
+    static Stack<Integer> stack = new Stack<>();
 
     static void init() throws Exception {
         N = Integer.parseInt(reader.readLine()); // 빌딩 수. 1 ~ 8만
@@ -19,16 +20,13 @@ public class Main {
 
     static void calc() throws Exception {
         long result = 0;
+        for (int h: hs) {
+            while (!stack.isEmpty() && stack.peek() <= h)
+                stack.pop();
 
-        int tmp;
-        for (int i=N-1; i>=1; i--) {
-            tmp = 0;
-            for (int k=i+1; k<=N; k++) {
-                if (hs[i] <= hs[k])
-                    break;
-                tmp++;
-            }
-            result += tmp;
+            result += stack.size();
+
+            stack.push(h);
         }
 
         System.out.println(result);
