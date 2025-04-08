@@ -48,8 +48,8 @@ class Solution {
         
         int nr, nc;
         for(int i=0; i<4; i++) {
-            nr = r + dr[i];
             nc = c + dc[i];
+            nr = r + dr[i];
             if (nr > 0 && nc > 0 && nr <= N && nc <= M) {
                 dfs(e_r, e_c, nr, nc, moves+1, cmd + cmds[i]);
             }
