@@ -35,11 +35,13 @@ class Solution {
     static void dfs(int e_r, int e_c, int r, int c, int moves, String cmd) {
         
         // moves + 현재 위치에서 목적지까지 최단거리가 k보다 크면 리턴
+        // if (isFailRoute(r, c, e_r, e_c, moves))
         if (isFailRoute(r, c, e_r, e_c, moves) || cmd.compareTo(result) > 0)
             return;
         
         // 제일 먼저 찾은 정답이 가장 빠른 명령어 조합임. cmds 추가하는 순서가 그렇게 되어있음.
         if (moves == K && r == e_r && c == e_c) {
+            // result = (result.compareTo(cmd) > 0) ? cmd : result;
             result = cmd;
             return;
         }
