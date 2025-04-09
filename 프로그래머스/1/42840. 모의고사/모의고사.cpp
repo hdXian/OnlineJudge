@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -24,10 +25,8 @@ vector<int> solution(vector<int> answers) {
         if (val == pattern3[i%10]) students[2]++;
     }
     
-    int max_val = -1;
-    for(int i=0; i<3; i++)
-        if (max_val < students[i])
-            max_val = students[i];
+    auto max_it = max_element(students.begin(), students.end());
+    int max_val = *max_it;
     
     vector<int> answer;
     for(int i=0; i<3; i++) {
