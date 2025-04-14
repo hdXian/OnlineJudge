@@ -20,10 +20,6 @@ public class Main {
     static class StationComparator implements Comparator<Station> {
         @Override
         public int compare(Station s1, Station s2) {
-            // 주유소의 기댓값은 (현재연료) - (주유소까지의 거리) + (획득 가능한 연료)임.
-            // 이걸 바탕으로 더 멀리 갈 수 있는 주유소를 결정할 수 있음.
-//            int cost1 = s1.gas - s1.distance;
-//            int cost2 = s2.gas - s2.distance;
             return Integer.compare(s2.gas, s1.gas); // 가스가 더 많은 순으로
         }
     }
