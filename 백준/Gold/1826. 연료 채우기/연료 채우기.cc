@@ -43,10 +43,6 @@ void init() {
 }
 
 int calc() {
-    // 1. 현재 위치에서 가진 연료료 도달할 수 있는 주유소들을 탐색한다.
-    // 2. 그 중 기댓값이 가장 높은 (가장 멀리 나갈 수 있는) 주유소를 고른다.
-    // 3. 목적지에 도착할 때까지 반복한다.
-
     int cur = 0; // 현재 위치
     int remain_gas = P; // 현재 남은 연료
     int remain_distance = L; // 목적지까지 남은 거리
@@ -81,8 +77,6 @@ int calc() {
         Station next = pq.top(); // 가장 앞의 주유소가 다음에 방문할 주유소
         pq.pop();
 
-        // cout << "next.distance = " << next.distance << endl;
-        // cout << "next.gas = " << next.gas << endl;
         remain_gas = remain_gas - (next.distance - cur) + next.gas;
         cur = next.distance;
         remain_distance = L - cur;
