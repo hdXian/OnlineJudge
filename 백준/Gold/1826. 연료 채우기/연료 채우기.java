@@ -24,6 +24,7 @@ public class Main {
         }
     }
 
+    // stations: 출발지에서 거리가 가까운 순으로 주유소들을 정렬
     public static Queue<Station> stations = new PriorityQueue<>((s1, s2) -> Integer.compare(s1.distance, s2.distance));
 
     public static void init() throws Exception {
@@ -53,8 +54,8 @@ public class Main {
         // 도달할 수 있는 주유소들을 저장할 우선순위 큐
         Queue<Station> pq = new PriorityQueue<>(new StationComparator());
 
-        int max_reachable = 0;
-        Station next;
+        int max_reachable = 0; // 현재 위치에서 도달할 수 있는 최대 거리 ex) 현재위치 4, 가진 연료가 10 -> max_reachable = 14
+        Station next; // 다음에 방문할 주유소 정보를 저장할 변수
         while (true) {
             // 남은 거리가 남은 연료보다 적거나 같을 경우 즉시 종료.
             if (remain_distance <= remain_gas) break;
@@ -75,8 +76,11 @@ public class Main {
 
             // 2. 각 주유소를 들렀을 때, 가장 멀리 갈 수 있는 주유소를 선택한다.
             next = pq.poll(); // pq에서 가장 먼저 뽑혀나온 것이 다음에 방문할 주유소
+
             remain_gas = remain_gas - (next.distance - cur) + next.gas; // 남은 연료 = (현재 연료 - 다음 주유소까지의 거리 + 다음 주유소에서 얻는 연료)
+
             cur = next.distance; // 현재 위치를 주유소의 위치로 업데이트
+
             remain_distance = L - cur; // 남은 거리 = (목적지 - 현재위치)
             count++;
         }
