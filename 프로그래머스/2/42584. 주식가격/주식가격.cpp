@@ -28,7 +28,7 @@ vector<int> solution(vector<int> prices) {
         mono.push(i);
     }
     
-    // 마지막까지 스택에 남은 
+    // 마지막까지 스택에 남은 항목들의 생존 시간을 계산한다.
     while(!mono.empty()) {
         answer[mono.top()] = (length-1) - mono.top();
         mono.pop();
