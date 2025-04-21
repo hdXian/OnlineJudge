@@ -8,7 +8,6 @@ public class Main {
     static int N, C, M;
 
     static List<Map<Integer, Integer>> town = new ArrayList<>(); // 마을
-    static int[] posts; // 현재 트럭의 목적지별 용량
 
     static void init() throws Exception {
         StringTokenizer tkn = new StringTokenizer(reader.readLine());
@@ -18,9 +17,8 @@ public class Main {
 
         M = Integer.parseInt(reader.readLine()); // 정보 개수 (1 ~ 10000)
 
-        posts = new int[N+1]; // 인덱스 1부터 쓰기
         // 각 마을의 택배 정보를 저장할 map 초기화
-        for(int i=0; i<N-1; i++) {
+        for(int i=0; i<N; i++) {
             town.add(new HashMap<>());
         }
 
@@ -36,45 +34,59 @@ public class Main {
     }
 
     static void calc() throws Exception {
-        int cap = 0;
         int count = 0; // 총 배송 수
+        Map<Integer, Integer> truck = new HashMap<>();
 
         // 1. 가장 가까운 마을 순으로 최대한 상자를 담는다.
         Map<Integer, Integer> t;
 
         // 각 마을을 순회
-        for(int i=1; i<=N-1; i++) {
+        for(int i=1; i<=N; i++) {
+
             // 현재 마을이 목적지인 짐을 모두 내린다.
-            count += posts[i];
-            cap -= posts[i];
-            posts[i] = 0;
+            if (truck.containsKey(i)) {
+                count += truck.get(i);
+                truck.remove(i);
+            }
 
             // 현재 마을의 택배 목록을 가져온다.
             t = town.get(i-1); // (2, 10), (3, 20), ...
 
-            // 현재 마을의 목적지 배열
+            // 트럭에 있는 짐들도 목록에 추가한다.
+            for(Integer key: truck.keySet()) {
+                if (t.containsKey(key)) {
+                    int amount = t.get(key) + truck.get(key);
+                    t.put(key, amount);
+                }
+                else
+                    t.put(key, truck.get(key));
+            }
+
+            // 트럭을 비운다.
+            truck.clear();
+
+            // 마을 + 트럭 짐들의 목적지 배열
             List<Integer> keyL = new ArrayList<>(t.keySet());
 
             // 목적지들을 가까운 순 (오름차순)으로 정렬
             keyL.sort(Comparator.naturalOrder());
 
             // 목적지들에 대해 트럭에 담을 수 있을만큼 담기
+            int cap = 0;
             for (Integer key: keyL) {
                 int amount = t.get(key);
                 if (cap + amount <= C) {
                     cap += amount;
-                    posts[key] += amount;
+                    truck.put(key, amount);
                 }
                 else { // 넘치면 가득 찰 만큼만 트럭에 담음
-                    posts[key] += C - cap;
-                    cap = C;
+                    truck.put(key, C - cap);
+                    break;
                 }
             }
 
         }
 
-        // 마지막 마을에 짐을 배송한다.
-        count += posts[N];
         System.out.println(count);
     }
 
