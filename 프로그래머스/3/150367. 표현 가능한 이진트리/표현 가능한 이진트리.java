@@ -33,11 +33,14 @@ class Solution {
         
         String fullBin = zeros + bin;
         if (fullBin.charAt(fullBin.length() / 2) == '0') return false;
-        return binarySearch(fullBin, 1, 0, nodes-1);
+        return binarySearch(fullBin, 1, 0, nodes-1); // true or false
     }
     
     static boolean binarySearch(String fullBin, int parent, int start, int end) {
         if (start == end) {
+            // 이제부터는 리프도 무조건 안심할 수 없음.
+            // 리프가 1이면 -> 부모도 반드시 1
+            // 리프가 0이면 -> 상관없음.
             if ((parent == 0) && (fullBin.charAt(start) == '1')) return false;
             else return true;
         }
