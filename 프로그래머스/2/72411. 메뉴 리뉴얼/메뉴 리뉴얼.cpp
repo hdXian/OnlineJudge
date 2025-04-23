@@ -19,9 +19,8 @@ void comb(string prefix, string postfix, int length, int depth, unordered_map<st
         }
     }
     else {
-        int l = postfix.length();
         for(int i=0; i<postfix.length(); i++) {
-            comb(prefix + postfix[i], postfix.substr(i+1,l-i-1), length, depth+1, count);
+            comb(prefix + postfix[i], postfix.substr(i+1), length, depth+1, count);
         }
     }
     
