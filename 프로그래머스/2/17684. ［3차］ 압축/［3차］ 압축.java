@@ -27,12 +27,8 @@ class Solution {
             
             // 3. w에 해당하는 인덱스를 출력하고, 입력에서 w를 제거한다.
             String w;
-            // w가 한 글자라면 그대로 자르기
-            if(n_idx == cur+1)
-                w = remain.substring(cur, n_idx);
-            // w가 한 글자 이상이라면 한 글자 빼고 자르기 (n_idx는 가장 긴 문자열+1 만큼 가 있음)
-            else
-                w = remain.substring(cur, --n_idx);
+            n_idx--;
+            w = remain.substring(cur, n_idx);
             
             // w에 해당하는 인덱스 출력
             ans.add(dict.get(w));
