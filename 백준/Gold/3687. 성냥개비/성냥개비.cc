@@ -60,7 +60,7 @@ void make_table() {
 
         // 6부터 비교
         for(int k=6; k>=1; k--) {
-            if (k == 1) tmp = "6" + dp_table[i-6];
+            if (k == 1) tmp = "6" + dp_table[i-6]; // 성냥 6개로 0이 아니라 6을 만들 경우도 고려
             else tmp = dp_table[k] + dp_table[i-k];
 
             if (tmp.length() > cur.length()) continue; // 자릿수가 더 많으면 무조건 더 큰수임. 건너 뜀.
@@ -68,14 +68,9 @@ void make_table() {
             sort(tmp.begin(), tmp.end()); // 문자열 사전순 정렬
             if (tmp[0] == '0') tmp = move_zeros(tmp); // 0 뒤로 보내기
 
-            //if (tmp.length() < cur.length()) {
-            //    cur = tmp;
-            //    continue;
-            //}
-
             cur = (cur < tmp) ? cur : tmp;
-
         }
+        
         dp_table[i] = cur;
     }
 
