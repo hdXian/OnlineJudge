@@ -6,10 +6,16 @@ public class Main {
 
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
+    static String process_closure(String exp) {
+        return "";
+    }
+
     static List<String> process_md(List<String> exp) {
         Stack<String> stk = new Stack<>();
         boolean flag = false;
         for (String s: exp) {
+
+            // 스택에 연산자가 들어와있음.
             if (flag) {
                 String tmp = stk.pop();
                 tmp = (stk.pop()) + s + tmp;
@@ -30,6 +36,8 @@ public class Main {
         Stack<String> stk = new Stack<>();
         boolean flag = false;
         for (String s: exp) {
+
+            // 스택에 연산자가 들어와있음.
             if (flag) {
                 String tmp = stk.pop();
                 tmp = (stk.pop()) + s + tmp;
@@ -47,6 +55,7 @@ public class Main {
     }
 
     static String calc(String exp) {
+        List<String> tmpL = new ArrayList<>();
 
         // 1. 괄호를 처리한다.
         Stack<String> stk = new Stack<>();
@@ -56,13 +65,13 @@ public class Main {
                 while(!stk.peek().equals("(")) tmp.push(stk.pop());
 
                 stk.pop(); // "(" 제거
-                
-                List<String> tmpL = new ArrayList<>();
+
                 while(!tmp.isEmpty()) tmpL.add(tmp.pop());
 
                 tmpL = process_md(tmpL);
                 tmpL = process_pm(tmpL);
                 for(String t: tmpL) stk.push(t);
+                tmpL.clear();
             }
             else
                 stk.push(String.valueOf(ch));
@@ -85,7 +94,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         String exp = reader.readLine();
-        System.out.print(calc(exp));
+        System.out.println(calc(exp));
     }
 
 }
