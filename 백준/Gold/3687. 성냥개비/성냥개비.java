@@ -74,12 +74,6 @@ public class Main {
                 if (sorted.startsWith("0"))
                     sorted = moveZero(sorted);
 
-                // 자릿수가 더 적으면 바로 업데이트하고 다음으로 넘어감.
-                if (sorted.length() < cur.length()) {
-                    cur = sorted;
-                    continue;
-                }
-
                 // 비교해서 저장한다.
                 cur = cur.compareTo(sorted) > 0 ? sorted : cur;
             }
