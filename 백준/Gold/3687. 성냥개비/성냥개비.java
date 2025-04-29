@@ -19,10 +19,12 @@ public class Main {
 
     static String moveZero(String s) {
         int seq = 0;
+
         while(seq < s.length() && s.charAt(seq) == '0') seq++;
 
         String zeros;
         char head;
+
         if(seq == s.length()) {
             zeros = s.substring(0, seq-1);
             return '6' + zeros;
@@ -43,7 +45,7 @@ public class Main {
             cases[i] = Integer.parseInt(reader.readLine()); // 성냥개비 개수 (2 ~ 100)
 
         min_dp = new String[101]; // 인덱스 1부터 쓰기
-        char[] tmp = "174208".toCharArray();
+        char[] tmp = "174208".toCharArray(); // {"1", "7", "4", "2", "0", "8"}
         for(int i=2; i<=7; i++) {
             min_dp[i] = String.valueOf(tmp[i-2]);
         }
@@ -60,7 +62,7 @@ public class Main {
             // 6부터 조합 비교
             for(int k=6; k>=1; k--) {
                 // 사전 순으로 정렬한다.
-                if (k == 1)
+                if (k == 1) // 6개 성냥으로 6을 만드는 경우의 수도 계산 (k 숫자와 무관, 그냥 하나 더 체크)
                     sorted = sortStr("6" + min_dp[i-6]);
                 else
                     sorted = sortStr(min_dp[k] + min_dp[i-k]);
@@ -72,6 +74,7 @@ public class Main {
                 if (sorted.startsWith("0"))
                     sorted = moveZero(sorted);
 
+                // 자릿수가 더 적으면 바로 업데이트하고 다음으로 넘어감.
                 if (sorted.length() < cur.length()) {
                     cur = sorted;
                     continue;
@@ -80,6 +83,8 @@ public class Main {
                 // 비교해서 저장한다.
                 cur = cur.compareTo(sorted) > 0 ? sorted : cur;
             }
+
+            // 6 부분에 0대신 6을 넣는 경우도 고려해야 함.
 
             min_dp[i] = cur;
         }
