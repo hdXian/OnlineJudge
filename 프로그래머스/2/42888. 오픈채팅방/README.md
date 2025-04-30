@@ -1,10 +1,10 @@
 # [level 2] 오픈채팅방 - 42888 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42888?language=java) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42888?language=cpp) 
 
 ### 성능 요약
 
-메모리: 164 MB, 시간: 288.24 ms
+메모리: 47.5 MB, 시간: 156.70 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 04월 24일 22:51:50
+2025년 04월 30일 21:36:28
 
 ### 문제 설명
 
