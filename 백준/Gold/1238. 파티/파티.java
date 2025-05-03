@@ -24,15 +24,13 @@ public class Main {
             if (this.cost == e.cost) return Integer.compare(this.dst, e.dst); // cost가 같다면 도착지 인덱스가 작은 순
             else return Integer.compare(this.cost, e.cost); // cost 기준으로 오름차순
         }
-
-        @Override
-        public String toString() {
-            return String.format("[cost=%d, dst=%d]", cost, dst);
-        }
+        
     }
 
     static List<List<Edge>> neighbors = new ArrayList<>();
-    static int[][] tables; // 각 노드의 다익스트라용 최단 거리 테이블
+    static List<List<Edge>> reverse_neighbors = new ArrayList<>();
+    static int[] tables; // 각 노드의 다익스트라용 최단 거리 테이블
+    static int[] reverse_tables;
 
     static void init() throws Exception {
         StringTokenizer tkn = new StringTokenizer(reader.readLine());
@@ -40,8 +38,10 @@ public class Main {
         M = Integer.parseInt(tkn.nextToken()); // 길 개수 (1 ~ 1만)
         X = Integer.parseInt(tkn.nextToken()); // 모일 곳 (1 ~ N)
 
-        for(int i=0; i<N; i++)
+        for(int i=0; i<N; i++) {
             neighbors.add(new ArrayList<>());
+            reverse_neighbors.add(new ArrayList<>());
+        }
 
         int s, r, t;
         for(int i=0; i<M; i++) {
@@ -50,17 +50,18 @@ public class Main {
             r = Integer.parseInt(tkn.nextToken());
             t = Integer.parseInt(tkn.nextToken());
             neighbors.get(s-1).add(new Edge(t, r)); // 인접 리스트에 추가
+            reverse_neighbors.get(r-1).add(new Edge(t, s)); // 반대방향 인접 리스트 추가
         }
 
-        tables = new int[N+1][N+1]; // 인덱스 1부터 쓰기
+        tables = new int[N+1]; // 인덱스 1부터 쓰기
+        reverse_tables = new int[N+1]; // 인덱스 1부터 쓰기
     }
 
     // 다익스트라
-    static void dijkstra(int start) {
+    static void dijkstra(int start, int[] table, List<List<Edge>> neighbors) {
         // start번 노드에 대해 다익스트라 알고리즘을 돌린다.
 
         // 1. start번 노드에 대한 최단 거리 테이블 초기화
-        int[] table = tables[start];
         Arrays.fill(table, INF);
 
         // 2. 노드를 저장할 우선순위 큐 초기화
@@ -97,14 +98,15 @@ public class Main {
     static void calc() {
         int result = -1;
         for(int i=1; i<=N; i++)
-            result = Math.max(result, tables[i][X] + tables[X][i]);
+            result = Math.max(result, tables[i] + reverse_tables[i]); // tables[0]
 
         System.out.println(result);
     }
 
     public static void main(String[] args) throws Exception {
         init();
-        for(int i=1; i<=N; i++) dijkstra(i);
+        dijkstra(X, tables, neighbors); // 원래 방향 그래프에서 시작점 X: X부터 모든 노드까지의 최단거리를 구한다.
+        dijkstra(X, reverse_tables, reverse_neighbors); // 반대 방향 그래프에서 시작점 X: 모든 노드에서 X까지의 최단거리를 구한다.
         calc();
     }
 
