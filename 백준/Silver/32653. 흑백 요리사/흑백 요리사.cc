@@ -16,7 +16,6 @@ long long gcd(long long a, long long b) {
     return a;
 }
 
-// 최소공배수
 long long lcm(long long a, long long b) {
     return a * b / gcd(a, b);
 }
