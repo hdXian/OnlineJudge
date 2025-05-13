@@ -45,7 +45,7 @@ public class Main {
         for(int i=0; i<T; i++) {
             n = Integer.parseInt(reader.readLine()); // 전화번호 수 (1 ~ 1만)
             List<String> book = new ArrayList<>();
-            for(int k=0; k<n; k++) book.add(reader.readLine()); // 전화번호 길이 1 ~ 10
+            for(int k=0; k<n; k++) book.add(reader.readLine());
             sb.append(calc(book)).append('\n');
         }
 
