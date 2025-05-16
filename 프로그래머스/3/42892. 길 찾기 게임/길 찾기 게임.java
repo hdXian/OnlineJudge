@@ -79,7 +79,6 @@ class Solution {
         
     }
     
-    
     public int[][] solution(int[][] nodeinfo) {
         // 1. 노드 번호와 좌표로 구성된 클래스를 만든다.
         // 2. y축 내림차순, x축 오름차순 순으로 노드들을 정렬한다.
