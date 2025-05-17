@@ -30,8 +30,6 @@ int calc(int n, int m) {
     vector<int> parents(n+1);
     for(int i=1; i<=n; i++) parents[i] = i;
 
-    vector<string> ways(m);
-
     int a, b;
     int count = 0;
     int result = 0;
