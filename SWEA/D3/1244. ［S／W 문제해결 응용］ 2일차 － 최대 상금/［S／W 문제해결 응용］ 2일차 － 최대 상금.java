@@ -1,81 +1,72 @@
 import java.util.*;
 import java.io.*;
-import java.math.*;
 
-public class Solution {
+class Solution {
 
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    static int T;
+    static int clength = 0;
     static int N;
-    static Integer result;
-    static int[] arr;
+    static String cards;
+    static String result;
+    static List<Set<String>> visited;
 
-    static void swap(int i, int j) {
-        int tmp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = tmp;
+    static void init(String line) {
+        StringTokenizer tkn = new StringTokenizer(line);
+
+        cards = tkn.nextToken(); // 숫자 카드 (문자열)
+        N = Integer.parseInt(tkn.nextToken()); // 교환 횟수.
+        visited = new ArrayList<>();
+        for(int i=0; i<N; i++) visited.add(new HashSet<>());
+
+        clength = cards.length();
+        result = "";
     }
 
-    static void comb(int start, int depth) {
-        int alength = arr.length;
+    static void swap(int a, int b, char[] cardArr) {
+        char tmp = cardArr[a];
+        cardArr[a] = cardArr[b];
+        cardArr[b] = tmp;
+    }
 
+    static void dfs(String card, int prei, int depth) {
         if (depth == N) {
-            int tmp = 0;
-            for(int i=0; i<alength; i++) tmp += (int) (arr[i] * Math.pow(10, alength-i-1));
-            result = Math.max(result, tmp);
+            result = (result.compareTo(card) > 0) ? result : card;
+            return;
         }
-        else {
-            for (int i=start; i<alength; i++) {
-                for (int j=i+1; j<alength; j++) {
-                    swap(i, j);
-                    comb(i,depth+1);
-                    swap(i, j); // 백트래킹
-                }
+
+        if (visited.get(depth).contains(card)) return;
+        visited.get(depth).add(card);
+
+        for(int i=prei; i<clength; i++) {
+            for(int j=i+1; j<clength; j++) {
+                char[] cardArr = card.toCharArray();
+                swap(i, j, cardArr);
+                dfs(new String(cardArr), i, depth+1);
+                swap(i, j, cardArr);
             }
         }
 
     }
 
-    static String calc(int[] cards, int n) {
-        result = -1;
-        N = n;
-        arr = cards;
-        comb(0, 0);
-        return result.toString();
+    static String calc(int t) {
+        dfs(cards, 0, 0);
+        return String.format("#%d %s\n", t, result);
     }
 
     public static void main(String[] args) throws Exception {
-
-        T = Integer.parseInt(reader.readLine()); // 테스트케이스 개수. 최대 10.
-
-        //System.setIn(new FileInputStream("res/input.txt"));
-		/*
-		   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
-		*/
+        int T;
+        T = Integer.parseInt(reader.readLine()); // 테케 개수. 1 ~ 10
 
         StringBuilder sb = new StringBuilder();
-        StringTokenizer tkn;
-        String card;
-        int n;
-
-        for (int i = 1; i <= T; i++) {
-            tkn = new StringTokenizer(reader.readLine());
-
-            card = tkn.nextToken();
-            n = Integer.parseInt(tkn.nextToken());
-
-            int clength = card.length();
-            int[] cards = new int[clength];
-            for(int k=0; k<clength; k++) cards[k] = Character.getNumericValue(card.charAt(k));
-
-            if (n > clength) n = clength;
-
-            String result = calc(cards, n);
-            sb.append("#").append(i).append(" ").append(result).append('\n');
+        for (int test_case = 1; test_case <= T; test_case++) {
+            String line = reader.readLine();
+            init(line); // 카드 배열, 길이, 교환 횟수 초기화
+            String result = calc(test_case);
+            sb.append(result);
         }
-
         System.out.println(sb);
+
     }
 
 }
