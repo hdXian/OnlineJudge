@@ -81,10 +81,7 @@ class Solution {
             }
         }
 
-        if ((total_cost * 10 % 10) >= 5) {
-            return Math.ceil(total_cost);
-        }
-        else return Math.floor(total_cost);
+        return Math.round(total_cost);
     }
 
     public static void main(String[] args) throws Exception {
