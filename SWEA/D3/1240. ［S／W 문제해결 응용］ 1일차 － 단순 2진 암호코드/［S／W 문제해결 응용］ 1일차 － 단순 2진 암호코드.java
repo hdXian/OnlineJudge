@@ -26,9 +26,7 @@ class Solution {
     }
 
     static int calc(String codeLine) {
-//        System.out.println("codeLine = " + codeLine);
-//        System.out.println("codeLine.length() = " + codeLine.length());
-        int[] num = new int[8];
+        int[] num = new int[8]; // 암호문에서 뽑아낸 숫자
         int seq = 0;
         int total = 0;
         String code;
@@ -67,28 +65,21 @@ class Solution {
             M = Integer.parseInt(tkn.nextToken()); // 가로
 
             // 하나의 테케동안 돌린다.
-            last_idx = -1;
             for(int i=0; i<N; i++) {
                 // 1. 각 라인을 받는다.
                 line = reader.readLine();
 
-                // 2. 받은 라인을 char 배열로 표현한 다음, '1'의 여부를 판단한다.
-                tmp = line.toCharArray();
+                // 2. '1'이 있는 라인이 암호 코드. '1'이 위치하는 가장 마지막 인덱스를 찾는다.
+                if (line.contains("1")) {
+                    last_idx = line.lastIndexOf("1");
 
-                // 3. '1'이 있는 라인이 암호 코드. '1'이 위치하는 가장 마지막 인덱스를 찾는다.
-                for(int k=0; k<M; k++) {
-                    if (tmp[k] == '1') last_idx = k;
-                }
-
-                // last_idx가 업데이트됐다면 해당 라인이 암호문이 있는 라인.
-                if (last_idx != -1) {
-//                    System.out.println("라인 찾음: last_idx = " + last_idx);
-                    // 4. '1'이 있는 라인에서 ('1'의 마지막 인덱스 ~ 56번 뒤까지 substring으로 뽑는다.)
-                    // 5. 뽑은 문자열을 암호 코드로 파싱하고 유효 여부를 검사하여 결과를 리턴한다. (calc)
-                    int result = calc(line.substring(last_idx-55, last_idx+1));
+                    // 3. '1'이 있는 라인에서 ('1'의 마지막 인덱스 ~ 56번 뒤까지 substring으로 뽑는다.)
+                    // 4. 뽑은 문자열을 암호 코드로 파싱하고 유효 여부를 검사하여 결과를 리턴한다. (calc)
+                    String codeLine = line.substring(last_idx-55, last_idx+1);
+                    int result = calc(codeLine);
                     sb.append(String.format("#%d %d\n", test_case, result));
 
-                    // 남은건 버리기
+                    // 남은건 버리고 i도 증가시키기
                     for(int k=i+1; k<N; k++) {
                         reader.readLine();
                         i++;
