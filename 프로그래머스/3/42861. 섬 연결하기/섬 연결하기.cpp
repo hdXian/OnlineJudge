@@ -5,7 +5,7 @@
 using namespace std;
 
 int find_parent(int n, vector<int>& parents) {
-    if (parents[n] != n) parents[n] = find_parent(parents[n], parents);
+    if (parents[n] != n) parents[n] = find_parent(parents[n], parents); // 경로 압축
     return parents[n];
 }
 
@@ -17,6 +17,8 @@ bool union_node(int n1, int n2, vector<int>& ranks, vector<int>& parents) {
     
     int r1 = ranks[p1];
     int r2 = ranks[p2];
+    
+    // 트리 깊이를 최대한 덜 늘리기 위해 ranks가 큰 쪽으로 union
     if (r1 == r2) {
         parents[p2] = p1;
         ranks[p1]++;
@@ -64,7 +66,8 @@ int solution(int n, vector<vector<int>> costs) {
     vector<int> ranks(n, 0);
     
     
-    // 비용 순으로 내림차순 정렬하는 pq 선언
+    // 비용 순으로 오름차순 정렬하는 pq 선언
+    // priority_queue<타입, 담을 자료구조, 비교 구조체 이름> pq;
     priority_queue<Edge, vector<Edge>, EdgeComparator> pq;
     int siz = costs.size();
     int p1, p2, cost;
@@ -72,13 +75,18 @@ int solution(int n, vector<vector<int>> costs) {
         p1 = costs[i][0];
         p2 = costs[i][1];
         cost = costs[i][2];
+        // 출발지, 목적지, 비용 정보를 담은 Edge 객체를 pq에 추가
         pq.push(Edge(p1, p2, cost));
     }
     
     int edge_count = 0;
     int total_cost = 0;
+    
+    // 큐가 비거나 선택된 도로가 n-1개가 될 때까지 반복
     while(!pq.empty() && edge_count<n-1) {
         Edge cur = pq.top();
+        // 부모가 달라서 집합을 합치는 경우 (return true) 해당 도로를 선택했다는 의미
+        // 도로 개수를 카운트하고, 전체 비용에도 더한다.
         if (union_node(cur.p1, cur.p2, ranks, parents)) {
             edge_count++;
             total_cost += cur.cost;
