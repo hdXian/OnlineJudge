@@ -39,12 +39,12 @@ class Solution {
         int blength; // 이진수로 표현된 한 줄의 길이
 
         for (int i=0; i<n; i++) {
-            // 16진수들을 2진수로 바꾼다.
             line = reader.readLine();
             
             // 이전의 라인과 같으면 건너뛴다.
             if (line.equals(pre_line)) continue;
-
+            
+            // 16진수들을 2진수로 바꾼다.
             binary_line = toBinaryLine(line);
             line_arr = binary_line.toCharArray();
             blength = line_arr.length; // 이거 쓰면 m이 필요없긴 하네.
