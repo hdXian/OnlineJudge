@@ -7,7 +7,7 @@ public class Main {
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     static int N, P, K;
-    static int[] distances; // 거리 합의 최댓값이 100억이라 long으로 선언
+    static int[] distances;
 
     static class Node implements Comparable<Node> {
         int number;
@@ -51,6 +51,17 @@ public class Main {
     }
 
     static boolean dijkstra(int min_cost) {
+
+        // 어차피 연결에 사용된 간선 중 가장 비싼 간선을 기준으로 가격이 책정되므로,
+        // min_cost 이하의 간선들만 선택하면 지출 비용은 min_cost로 고정된다.
+        // 단, min_cost보다 큰 간선들은 K개 이하까지 고를 수 있다.
+
+        // K+1번째로 비싼 간선 선택하기 -> 지루하고 현학적임. 반례가 존재하면 내 로직이 무너짐.
+        // K개 간선을 무료로 선택했다는 것을 전제하고, min_cost를 기준으로 간선을 선택하면서 min_cost를 조금씩 줄여나간다.
+        // 그렇게 선택된 간선들 중 K+1번째로 비용이 비싼 간선이 실제 지불해야하는 비용이다.
+        // 조건을 만족하는 최소 min_cost를 찾고, 그 때 최단경로에 선택된 간선들을 찾아 K+1번째로 비싼 간선의 비용을 리턴한다.
+
+        // 기준값보다 비싸? 그럼 죽어 -> 팩트임. 기억에 오래 남음
         // min_cost보다 작거나 같은 간선은 가중치를 0으로 잡는다.
         // min_cost보다 큰 간선은 가중치를 1로 잡는다.
         // 그 상태로 다익스트라를 돌리면, 경로 자체는 최단거리가 아닐지라도 어쨌든 최대한 min_cost보다 비용이 적은 간선들로만 최단 경로를 구성하게 될 것이다.
