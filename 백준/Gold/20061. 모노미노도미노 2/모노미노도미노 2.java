@@ -19,7 +19,7 @@ public class Main {
     }
 
     static void moveBlock(int t, int row, int col) {
-        // 조건을 만족할 때까지 col을 이동시킨 뒤 블록을 배치시킨다.
+        // 조건을 만족할 때까지 row 또는 col을 이동시킨 뒤 블록을 배치시킨다.
         int br, bc; // 파랑 영역 (조건을 만족할 떄까지 col을 이동)
         int gr, gc; // 초록 영역 (조건을 만족랄 때까지 row를 이동)
 
@@ -29,7 +29,7 @@ public class Main {
         // 한칸짜리
         if (t == 1) {
             // 파랑 처리
-            while(bc<10 && !board[br][bc] ) bc++;
+            while(bc<10 && !board[br][bc]) bc++;
             board[br][bc-1] = true;
 
             // 초록 처리
@@ -77,7 +77,9 @@ public class Main {
 
     // 연한 파랑 영역 확인 (해당 열에 블록이 하나라도 있으면 true)
     static boolean checkEdgeCol(int col) {
-        for(int r=0; r<4; r++) if(board[r][col]) return true;
+        for(int r=0; r<4; r++) {
+            if(board[r][col]) return true;
+        }
         return false;
     }
 
