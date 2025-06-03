@@ -1,24 +1,21 @@
 #include <iostream>
-#include <queue>
+#include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
 unordered_map<string, int> word_map;
 
-struct wordComparator {
-
-    bool operator() (string s1, string s2) {
-        int c1 = word_map[s1];
-        int c2 = word_map[s2];
-        if (c1 == c2) {
-            if (s1.length() == s2.length()) return !(s1 < s2); // 사전 오름차순 (최대 큐이므로 반대로 리턴)
-            else return -s2.length() < -s1.length(); // 단어 길이 내림차순(최대 큐이므로 음수 붙여서 비교)
-        }
-        else return -c2 < -c1; // 빈도수 내림차순 (최대 큐이므로 음수 붙여서 비교)
+bool word_comp(string s1, string s2) {
+    int c1 = word_map[s1];
+    int c2 = word_map[s2];
+    if (c1 == c2) {
+        if (s1.length() == s2.length()) return s1 < s2; // 사전 오름차순 (최대 큐이므로 반대로 리턴)
+        else return s2.length() < s1.length(); // 단어 길이 내림차순(최대 큐이므로 음수 붙여서 비교)
     }
-
-};
+    else return c2 < c1; // 빈도수 내림차순 (최대 큐이므로 음수 붙여서 비교)
+}
 
 int main() {
     ios::sync_with_stdio(false);
@@ -37,17 +34,16 @@ int main() {
         word_map[tmp]++;
     }
 
-    priority_queue<string, vector<string>, wordComparator> pq;
-
+    vector<string> arr(word_map.size());
+    
+    int seq = 0;
     for(auto it = word_map.begin(); it != word_map.end(); it++) {
-        pq.push(it->first);
+        arr[seq++] = it->first;
     }
 
-    while(!pq.empty()) {
-        string cur = pq.top();
-        pq.pop();
-        cout << cur << '\n';
-    }
+    sort(arr.begin(), arr.end(), word_comp);
+
+    for(const string& s: arr) cout << s << '\n';
     cout.flush();
 
     return 0;
