@@ -23,7 +23,6 @@ struct Node {
 int bfs(vector<string>& board, Node src, Node dst) {
     vector<vector<bool>> visited(r_siz, vector<bool>(c_siz));
     
-    int cost = 0;
     queue<Node> q;
     visited[src.row][src.col] = true;
     q.push(Node(src.row, src.col, 0));
