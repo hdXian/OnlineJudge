@@ -4,15 +4,11 @@
 
 using namespace std;
 
-int r_siz;
-int c_siz;
-
-int dr[4] = {-1, 1, 0, 0};
-int dc[4] = {0, 0, -1, 1};
+int dr[] = {-1, 1, 0, 0};
+int dc[] = {0, 0, -1, 1};
 
 struct Node {
-    int row, col;
-    int cost;
+    int row, col, cost;
     Node(int row, int col, int cost) {
         this->row = row;
         this->col = col;
@@ -20,29 +16,34 @@ struct Node {
     }
 };
 
-int bfs(vector<string>& board, Node src, Node dst) {
-    vector<vector<bool>> visited(r_siz, vector<bool>(c_siz));
+// src -> dst까지의 최단거리를 bfs로 찾아 리턴하는 함수
+int bfs(vector<string>& maps, pair<int, int> src, pair<int, int> dst) {
+    int r_siz = maps.size();
+    int c_siz = maps[0].length();
+    vector<vector<bool>> visited(r_siz, vector<bool>(c_siz, false));
     
     queue<Node> q;
-    visited[src.row][src.col] = true;
-    q.push(Node(src.row, src.col, 0));
+    q.push(Node(src.first, src.second, 0));
+    visited[src.first][src.second] = true;
+    
     Node result(-1, -1, -1);
     
     while(!q.empty()) {
         Node cur = q.front();
         q.pop();
-
-        if (cur.row == dst.row && cur.col == dst.col) {
+        
+        if(cur.row == dst.first && cur.col == dst.second) {
             result = cur;
             break;
         }
-
+        
         for(int i=0; i<4; i++) {
             int nr = cur.row + dr[i];
             int nc = cur.col + dc[i];
-            if (nr >= 0 && nc >= 0 && nr < r_siz && nc < c_siz && board[nr][nc] != 'X' && !visited[nr][nc]) {
+            int next_cost = cur.cost + 1;
+            if (nr >=0 && nc >=0 && nr < r_siz && nc < c_siz && maps[nr][nc] != 'X' && !visited[nr][nc]) {
+                q.push(Node(nr, nc, next_cost));
                 visited[nr][nc] = true;
-                q.push(Node(nr, nc, cur.cost+1));
             }
         }
         
@@ -52,44 +53,38 @@ int bfs(vector<string>& board, Node src, Node dst) {
 }
 
 int solution(vector<string> maps) {
-    // 1. 출발지점 -> 레버 칸으로 이동하는 최단거리 구하기
-    // 2. 레버 칸 -> 출구 칸으로 이동하는 최단거리 구하기
-    // 3. 둘이 더하기
+    // 1. 시작점 -> 레버까지의 최단거리를 구한다.
+    // 2. 레버 -> 도착점까지의 최단거리를 구한다.
+    pair<int, int> start;
+    pair<int, int> middle;
+    pair<int, int> end;
     
-    int sr, sc; // 출발
-    int er, ec; // 도착
-    int lr, lc; // 레버
-    
-    // 출발, 도착, 레버 지점의 row, col 구하기
-    r_siz = maps.size();
-    c_siz = maps[0].size();
-    for(int i=0; i<r_siz; i++) {
-        for(int j=0; j<c_siz; j++) {
-            if (maps[i][j] == 'O' || maps[i][j] == 'X') continue;
-            if (maps[i][j] == 'S') {
-                sr = i;
-                sc = j;
+    int r_siz = maps.size();
+    int c_siz = maps[0].length();
+    for(int r=0; r<r_siz; r++) {
+        for(int c=0; c<c_siz; c++) {
+            if (maps[r][c] == 'O' || maps[r][c] == 'X') continue;
+            
+            if (maps[r][c] == 'S') {
+                start.first = r;
+                start.second = c;
             }
-            else if (maps[i][j] == 'L') {
-                lr = i;
-                lc = j;
+            else if (maps[r][c] == 'L') {
+                middle.first = r;
+                middle.second = c;
             }
             else {
-                er = i;
-                ec = j;
+                end.first = r;
+                end.second = c;
             }
         }
     }
     
-    // 출발지 -> 레버
-    int c1 = bfs(maps, Node(sr, sc, 0), Node(lr, lc, 0));
+    int c1 = bfs(maps, start, middle);
+    if (c1 == -1) return -1;
     
-    // 레버 -> 도착지
-    int c2 = bfs(maps, Node(lr, lc, 0), Node(er, ec, 0));
+    int c2 = bfs(maps, middle, end);
+    if (c2 == -1) return -1;
     
-    int answer;
-    if (c1 < 0 || c2 < 0) answer = -1;
-    else answer = c1 + c2;
-    
-    return answer;
+    return c1 + c2;
 }
