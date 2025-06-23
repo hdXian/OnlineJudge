@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include <iostream>
+#include <queue>
 
 using namespace std;
 
@@ -9,73 +9,78 @@ using namespace std;
 int dr[] = {-1, 1, 0, 0};
 int dc[] = {0, 0, -1, 1};
 
+vector<vector<int>> board_ext;
+int table[25][25][4]; // 상, 하, 좌, 우로부터 해당 좌표에 진입하는 경로의 최소 비용을 저장한다.
 int N;
-int table[25][25][4];
-bool visited[25][25] = {false, };
-vector<vector<int>> board_comp;
 
-// pre_dir: 해당 좌표로 오기 직전의 진행방향. 상하좌우 0123
-void dfs(int row, int col, int cost, int pre_dir) {
-    // cost: 현재 위치까지 오는데 든 비용
-    if (cost > table[row][col][pre_dir]) return;
+struct Node {
+    int row, col;
+    int dir; // 해당 노드에 방문하기 직전의 방향
+    int cost;
+    Node(int row, int col, int dir, int cost) {
+        this->row = row;
+        this->col = col;
+        this->dir = dir;
+        this->cost = cost;
+    }
+};
+
+void bfs(int row, int col, int direction) {
+    queue<Node> q;
+    q.push(Node(row, col, direction, 0));
     
-    table[row][col][pre_dir] = cost;
-    
-    for(int i=0; i<4; i++) {
+    while(!q.empty()) {
+        Node cur = q.front();
+        q.pop();
         
-        int nr = row + dr[i];
-        int nc = col + dc[i];
+        int r = cur.row;
+        int c = cur.col;
+        int dir = cur.dir;
+        int cost = cur.cost;
         
-        if (nr >=0 && nc >=0 && nc < N && nr < N && board_comp[nr][nc] == 0) {
-            if (!visited[nr][nc]) {
-                visited[nr][nc] = true;
+        for(int i=0; i<4; i++) {
+            int nr = r + dr[i];
+            int nc = c + dc[i];
+            // 상하좌우 노드를 방문
+            if (nr >=0 && nc >=0 && nr < N && nc < N && board_ext[nr][nc] == 0) {
+                // 방향이 변하지 않았을 경우 +100, 변했을 경우 +600
+                // 상->하, 좌->우 같은 형식으로 바뀌는 경우는 제외 (역행)
+                int new_cost = (dir == i) ? (cost+100) : (cost+600);
                 
-                // 시작점인 경우
-                if (row == 0 && col == 0) {
-                    dfs(nr, nc, cost+100, i);
-                }
-                // 직전 방향과 같은 방향으로 진행할 경우
-                else if (i == pre_dir) {
-                    dfs(nr, nc, cost+100, i);
-                }
-                // 직전 방향과 다른 방향으로 꺾을 경우
-                // 방향이 좌 -> 우, 상 -> 하 이런 식으로 바뀌진 않음. visited에서 걸러짐.
-                else {
-                    dfs(nr, nc, cost+600, i);
+                // 더 짧은 거리가 있을 경우 큐에 추가
+                if (new_cost < table[nr][nc][i]) {
+                    table[nr][nc][i] = new_cost;
+                    q.push(Node(nr, nc, i, new_cost));
                 }
                 
-                visited[nr][nc] = false;
             }
         }
+        
     }
     
 }
 
 int solution(vector<vector<int>> board) {
-    // 전역변수로 올리기
+    
     N = board.size();
-    board_comp = board;
+    board_ext = board;
     
     // 1. dp 테이블을 초기화한다.
     for(int i=0; i<25; i++) {
         for(int j=0; j<25; j++) {
-            for(int k=0; k<4; k++) {
+            for(int k=0; k<4; k++)
                 table[i][j][k] = INF;
-            }
         }
     }
     
-    // 2. 시작 지점의 비용을 0으로 초기화한다.
-    for(int i=0; i<4; i++) {
-        table[0][0][i] = 0;
-    }
-    visited[0][0] = true;
-    
-    // 3. dfs로 완탐을 돌면서 최소 비용을 저장한다.
-    dfs(0, 0, 0, 0);
+    // 2. bfs로 시작지점 -> 우, 시작지점 -> 하 2가지 경우를 계산한다.
+    // bfs 안에서 걸러도 되는데, 조건문을 너무 많이 비교할 것 같음.
+    bfs(0, 0, 3);
+    bfs(0, 0, 1);
     
     int result = table[N-1][N-1][0];
     for(int i=0; i<4; i++) result = min(result, table[N-1][N-1][i]);
+    
     return result;
 }
 
