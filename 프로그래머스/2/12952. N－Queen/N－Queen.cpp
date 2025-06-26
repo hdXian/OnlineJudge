@@ -2,8 +2,6 @@
 #include <vector>
 #include <algorithm>
 
-#include <iostream>
-
 using namespace std;
 
 int result = 0;
@@ -12,31 +10,29 @@ int N;
 int dr[] = {-1, -1, 0, 1, 1, 1, 0, -1};
 int dc[] = {0, 1, 1, 1, 0, -1, -1, -1};
 
-bool put_queen(vector<int>& cur) {
-    vector<vector<bool>> board(N, vector<bool>(N, false));
+// 기존 좌표, 새로 놓을 좌표
+bool put_queen(vector<int>& cur, int r, int c) {
     int r_siz = cur.size();
     
     for(int i=0; i<r_siz; i++) {
-        int row = i;
-        int col = cur[i];
+        int cr = i;
+        int cc = cur[i];
         
-        // 퀸을 두려는 자리가 배치 불가능한 위치할 경우 false 리턴
-        if (board[row][col]) return false; 
+        // 같은 열이나 행에 있으면 배치 불가
+        if(cr == r || cc == c) return false;
         
-        board[row][col] = true;
-        // 8방향으로 뻗어나가며 배치 불가능한 영역 업데이트
-        for(int k=0; k<8; k++) {
-            int nr = row + dr[k];
-            int nc = col + dc[k];
+        // 놓는 위치에서 대각선 방향 중에 cr, cc로 지정한 퀸이 있으면 배치 불가
+        for(int i=0; i<8; i++) {
+            int nr = cr + dr[i];
+            int nc = cc + dc[i];
             while(nr >=0 && nc >=0 && nr < N && nc < N) {
-                board[nr][nc] = true;
-                nr += dr[k];
-                nc += dc[k];
+                if(nr == r && nc == c) return false;
+                nr += dr[i];
+                nc += dc[i];
             }
         }
     }
     
-    // 문제없이 배치되었다면 true 리턴
     return true;
 }
 
@@ -47,11 +43,13 @@ void dfs(vector<int> cur) {
     }
     
     for(int i=0; i<N; i++) {
-        if (find(cur.begin(), cur.end(), i) != cur.end()) continue;
-        
-        cur.push_back(i);
-        if (put_queen(cur)) dfs(cur);
-        cur.pop_back();
+        int r = cur.size();
+        int c = i;
+        if (put_queen(cur, r, c)) {
+            cur.push_back(i);
+            dfs(cur);
+            cur.pop_back();
+        }
     }
     
 }
