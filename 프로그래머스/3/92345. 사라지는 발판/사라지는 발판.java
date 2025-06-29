@@ -30,15 +30,16 @@ class Solution {
             if (nr >=0 && nc >=0 && nr < R && nc < C && board[nr][nc] == 1) {
                 board[r][c] = 0;
                 if (is_a_turn)
-                    turns = dfs(!is_a_turn, nr, nc, br, bc) + 1;
+                    turns = dfs(!is_a_turn, nr, nc, br, bc) + 1; // 이동하고 턴을 넘긴다. 이동횟수가 1 추가된다.
                 else
-                    turns = dfs(!is_a_turn, ar, ac, nr, nc) + 1;
+                    turns = dfs(!is_a_turn, ar, ac, nr, nc) + 1; // 이동하고 턴을 넘긴다. 이동횟수가 1 추가된다.
                 
                 board[r][c] = 1; // 백트래킹
             }
             
             // best가 짝수로 저장돼있다 -> 지금껏 찾은 최선의 수가 자신의 패배를 기준으로 저장돼있다
             if (best%2 == 0) {
+                // turns의 홀짝 여부에 따라 현재 플레이어(is_a_turn 기준 A, B)가 마지막까지 가서 이겼는지, 졌는지 알 수 있다
                 if (turns%2 == 1) best = turns; // 이긴 경우를 찾았다 -> 바로 업데이트
                 else best = Math.max(best, turns); // 진 또 다른 경우를 찾았다 -> 더 많이 움직인 경우로 업데이트
             }
