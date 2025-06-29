@@ -28,6 +28,8 @@ class Solution {
             
             int diff = calcScore(cur);
             
+            // dfs 순서에 의해 더 낮은 점수를 많이 맞춘 경우가 나중에 고려되어 답을 덮어씀.
+            // 따라서 "점수 차가 같은 경우, 더 낮은 점수를 많이 맞힌 경우를 리턴한다" 조건을 자동으로 만족하게 됨.
             if (diff > 0 && diff > max_diff) {
                 max_diff = diff;
                 result = cur.clone();
