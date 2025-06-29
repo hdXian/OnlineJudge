@@ -30,9 +30,10 @@ class Solution {
             
             if (diff > 0 && diff > max_diff) {
                 max_diff = diff;
-                for(int i=0; i<11; i++) result[i] = cur[i];
+                result = cur.clone();
             }
             
+            cur[10] = 0; // 백트래킹
             return;
         }
         
@@ -52,7 +53,6 @@ class Solution {
     
     public int[] solution(int n, int[] info) {
         appech = info;
-        result = new int[11];
         
         int[] cur = new int[11];
         Arrays.fill(cur, 0);
@@ -60,12 +60,11 @@ class Solution {
         dfs(10, cur, n);
         
         if (max_diff == -1) {
-            int[] res = new int[1];
-            res[0] = -1;
-            return res;
+            result = new int[1];
+            result[0] = -1;
         }
         
-        else return result;
+        return result;
     }
     
 }
